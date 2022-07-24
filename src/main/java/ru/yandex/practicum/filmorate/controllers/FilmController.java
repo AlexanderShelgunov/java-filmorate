@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.ValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,39 +16,45 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private int idGenerator = 0;
-    private final HashMap<Integer, Film> films = new HashMap<>();
+
+    @Autowired
+    FilmService filmService;
 
     @GetMapping
     public ArrayList<Film> findAll() {
-        log.info("Текущее количество фильмов: {}", films.size());
-        return new ArrayList<>(films.values());
+        log.info("Текущее количество фильмов: {}", filmService.findAll().size());
+        return filmService.findAll();
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    public Film likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
+        return filmService.likeTheFilm(filmId, userId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public Film removeLikeFromFilm (@PathVariable final int filmId, @PathVariable final int userId) {
+        return filmService.removeLikeFromFilm(filmId, userId);
+    }
+
+    @GetMapping("/popular")
+    public ArrayList<Film> findPopularFilms(
+            @RequestParam (value = "count", defaultValue = "10", required = false) Integer count) {
+        return filmService.findPopularFilms(count);
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) throws ValidationException {
-        if (film != null) {
-            film.setId(++idGenerator);
-            checkValidation(film);
-            log.info("Сохраняемый фильм: {}", films);
-            films.put(film.getId(), film);
-        }
-        return film;
+    public Film create(@RequestBody Film film) throws ValidateException {
+        checkValidation(film);
+        return filmService.create(film);
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) throws ValidationException {
+    public Film update(@RequestBody Film film) throws ValidateException {
         checkValidation(film);
-        log.info("Обновляемый фильм: {}", films);
-        if (films.get(film.getId()) == null) {
-            log.info("Фильма с таким ID {} не существует", film.getId());
-            throw new ValidationException("Фильма с таким ID " + film.getId() + " не существует");
-        }
-        films.put(film.getId(), film);
-        return film;
+        return filmService.update(film);
     }
 
-    public void checkValidation(Film film) throws ValidationException {
+    public void checkValidation(Film film) throws ValidateException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         LocalDate minDate = LocalDate.parse("1895-12-28", formatter);
         String dateOfFilm = film.getReleaseDate().format(formatter);
@@ -54,23 +62,23 @@ public class FilmController {
 
         if (film.getName() == null || "".equals(film.getName())) {
             log.info("Название фильма {} пустое", film.getName());
-            throw new ValidationException("Название фильма \"" + film.getName() + "\" не может быть пустым");
+            throw new ValidateException("Название фильма \"" + film.getName() + "\" не может быть пустым");
         }
 
         if (film.getDescription().length() > 200) {
             log.info("Описание фильма длиннее 200 символов: {}", film.getDescription().length());
-            throw new ValidationException("Описание фильма не может быть больше 200 символов: " + film.getName());
+            throw new ValidateException("Описание фильма не может быть больше 200 символов: " + film.getName());
         }
 
         if (parsedDateOfFilm.isBefore(minDate)) {
             log.info("Дата фильма {} раньше 28 декабря 1895 года", film.getReleaseDate());
-            throw new ValidationException("Дата фильма " + film.getReleaseDate() +
+            throw new ValidateException("Дата фильма " + film.getReleaseDate() +
                     " не может быть раньше 28 декабря 1895 года;");
         }
 
         if (film.getDuration() <= 0) {
             log.info("Продолжительность фильма {} отрицательное", film.getDuration());
-            throw new ValidationException("Продолжительность фильма \"" + film.getDuration() +
+            throw new ValidateException("Продолжительность фильма \"" + film.getDuration() +
                     "\" не может быть отрицательной или 0");
         }
     }
