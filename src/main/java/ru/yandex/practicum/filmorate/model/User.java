@@ -17,6 +17,7 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
+
     @JsonIgnore
     private Set<User> friendsId = new HashSet<>();
 

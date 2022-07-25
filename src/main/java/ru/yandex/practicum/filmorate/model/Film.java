@@ -20,5 +20,5 @@ public class Film {
     private int duration;
 
     @JsonIgnore
-    private Set<User> likeUserIds = new HashSet<>();
+    private Set<Integer> likeUserIds = new HashSet<>();
 }
