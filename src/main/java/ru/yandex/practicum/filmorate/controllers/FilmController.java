@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,17 +28,19 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public Film likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
-        return filmService.likeTheFilm(filmId, userId);
+    public void likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
+        log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilm(filmId));
+        filmService.likeTheFilm(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public Film removeLikeFromFilm (@PathVariable final int filmId, @PathVariable final int userId) {
-        return filmService.removeLikeFromFilm(filmId, userId);
+    public void removeLikeFromFilm (@PathVariable final int filmId, @PathVariable final int userId) {
+        log.info("Пользователь {} удаляет лайк фильма {}", filmService.getUser(userId), filmService.getFilm(filmId));
+        filmService.removeLikeFromFilm(filmId, userId);
     }
 
     @GetMapping("/popular")
-    public ArrayList<Film> findPopularFilms(
+    public List<Film> findPopularFilms(
             @RequestParam (value = "count", defaultValue = "10", required = false) Integer count) {
         return filmService.findPopularFilms(count);
     }
@@ -51,6 +54,7 @@ public class FilmController {
     @PutMapping
     public Film update(@RequestBody Film film) throws ValidateException {
         checkValidation(film);
+        log.info("Обновляемый фильм: {}", film);
         return filmService.update(film);
     }
 

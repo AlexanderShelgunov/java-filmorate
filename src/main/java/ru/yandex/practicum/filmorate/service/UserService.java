@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -9,8 +8,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
+import java.util.Set;
 
-@Slf4j
 @Service
 public class UserService {
 
@@ -40,7 +39,6 @@ public class UserService {
             if (user.getName() == null || user.getName().equals("")) {
                 user.setName(user.getLogin());
             }
-            log.info("Сохраняемый пользователь: {}", user);
             userStorage.saveUser(user);
         }
         return user;
@@ -53,30 +51,49 @@ public class UserService {
             if (userStorage.getUser(id) == null) {
                 throw new NotFoundException("Пользователь c id=" + id + " не найден");
             }
-
-            log.info("Обновляемый пользователь: {}", user);
             userStorage.updateUser(user);
         }
         return user;
     }
 
-    //TODO
-    public User addAsFriend(int userId, int friendId) {
-        return null;
+    public void addAsFriend(int userId, int friendId) {
+        final User user = userStorage.getUser(userId);
+        final User friend = userStorage.getUser(friendId);
+        if (user == null || friend == null) {
+            throw new NotFoundException("Пользователь " + user + " или " + friend +" не найден");
+        }
+        userStorage.addAsFriend(user, friend);
     }
 
-    //TODO
-    public User deleteAsFriend(int userId, int friendId) {
-        return null;
+    public void deleteAsFriend(int userId, int friendId) {
+        final User user = userStorage.getUser(userId);
+        final User friend = userStorage.getUser(friendId);
+
+        if (user == null || friend == null) {
+            throw new NotFoundException("Пользователь " + user + " или " + friend +" не найден");
+        }
+        userStorage.deleteAsFriend(user, friend);
     }
 
-    //TODO
-    public ArrayList<User> findAllFriends() {
-        return null;
+    public ArrayList<Integer> findAllFriends(int userId) {
+        final User user = userStorage.getUser(userId);
+
+        if (user == null) {
+            throw new NotFoundException("Пользователь " + user + " не найден");
+        }
+
+        return userStorage.findAllFriends(user);
+
     }
 
-    //TODO
-    public ArrayList<User> findCommonFriends() {
-        return null;
+    public ArrayList<Integer> findCommonFriends(int userId, int commonId) {
+        final User user = userStorage.getUser(userId);
+        final User common = userStorage.getUser(commonId);
+
+        if (user == null || common == null) {
+            throw new NotFoundException("Пользователь " + user + " или " + common +" не найдены");
+        }
+
+        return userStorage.findCommonFriends(user, common);
     }
 }

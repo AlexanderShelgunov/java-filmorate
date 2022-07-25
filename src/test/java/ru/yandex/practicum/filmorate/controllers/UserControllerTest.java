@@ -19,7 +19,7 @@ class UserControllerTest {
         user.setEmail("mail@mail.ru");
         user.setLogin("Login");
     }
-//TODO пофиксить тесты c check переехал в InMemory
+
 //    @Test
 //    void validateEmail() {
 //
