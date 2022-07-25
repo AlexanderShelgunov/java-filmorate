@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -27,10 +26,16 @@ public class FilmController {
         return filmService.findAll();
     }
 
+    @GetMapping("/{filmId}")
+    public Film getFilm(@PathVariable int filmId) {
+        log.info("Фильм {} полученый по ID={}", filmService.getFilm(filmId), filmId);
+        return filmService.getFilm(filmId);
+    }
+
     @PutMapping("/{filmId}/like/{userId}")
     public void likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
         log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilm(filmId));
-        filmService.likeTheFilm(filmId, userId);
+        filmService.addLikeTheFilm(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")

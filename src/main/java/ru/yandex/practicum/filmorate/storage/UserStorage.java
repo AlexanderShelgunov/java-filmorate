@@ -21,7 +21,7 @@ public interface UserStorage {
 
     void deleteAsFriend(User user, User friend);
 
-    ArrayList<Integer> findAllFriends(User user);
+    ArrayList<User> findAllFriends(User user);
 
-    ArrayList<Integer> findCommonFriends(User user, User common);
+    ArrayList<User> findCommonFriends(User user, User common);
 }

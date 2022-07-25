@@ -14,19 +14,19 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilm(int filmId) {
-        return null;
+        return films.get(filmId);
     }
 
     @Override
     public Film saveFilm(Film film) {
         film.setId(++idGenerator);
-        films.put(film.getId(), film);
-        return null;
+        return films.put(film.getId(), film);
     }
 
     @Override
     public Film updateFilm(Film film) {
-        return null;
+        films.put(film.getId(), film);
+        return film;
     }
 
     @Override
@@ -36,18 +36,25 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void likeTheFilm(User user, Film film) {
-        film.getLikeUserIds().add(user.getId());
+        film.getLikeUserIds().add(user);
     }
 
     @Override
     public void removeLikeFromFilm(User user, Film film) {
-        film.getLikeUserIds().remove(user.getId());
+        film.getLikeUserIds().remove(user);
     }
 
     @Override
     public List<Film> findPopularFilms(int count) {
-
         List<Film> countOfLikes = new ArrayList<>(films.values());
-        return countOfLikes.stream().sorted(Comparator.comparingInt(f -> f.getLikeUserIds().size())).limit(count).collect(Collectors.toList());
+        for (Film f : films.values()) {
+            System.out.println("FILM---------" + f.getName() + "          LIKE-------------" + f.getLikeUserIds().size());
+        }
+
+        return countOfLikes
+                .stream()
+                .sorted(Comparator.comparingInt(f -> f.getLikeUserIds().size()))
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }

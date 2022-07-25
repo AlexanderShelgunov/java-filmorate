@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Film {
@@ -19,5 +20,5 @@ public class Film {
     private int duration;
 
     @JsonIgnore
-    private Set<Integer> likeUserIds = new HashSet<>();
+    private Set<User> likeUserIds = new HashSet<>();
 }

@@ -21,14 +21,13 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User saveUser(User user) {
         user.setId(++idGenerator);
-        users.put(user.getId(), user);
-        return user;
+        return users.put(user.getId(), user);
     }
 
     @Override
     public User updateUser(User user) {
         users.put(user.getId(), user);
-        return user;
+        return users.put(user.getId(), user);
     }
 
     @Override
@@ -38,30 +37,30 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void addAsFriend(User user, User friend) {
-        user.getFriendsId().add(friend.getId());
-        friend.getFriendsId().add(user.getId());
+        user.getFriendsId().add(friend);
+        friend.getFriendsId().add(user);
     }
 
     @Override
     public void deleteAsFriend(User user, User friend) {
-        user.getFriendsId().remove(friend.getId());
-        friend.getFriendsId().remove(user.getId());
+        user.getFriendsId().remove(friend);
+        friend.getFriendsId().remove(user);
     }
 
     @Override
-    public ArrayList<Integer> findAllFriends(User user) {
+    public ArrayList<User> findAllFriends(User user) {
         return new ArrayList<>(user.getFriendsId());
     }
 
     @Override
-    public ArrayList<Integer> findCommonFriends(User user, User common) {
-        final Set<Integer> userFriends = user.getFriendsId();
-        final Set<Integer> otherFriends = common.getFriendsId();
-        ArrayList<Integer> result = new ArrayList<>();
+    public ArrayList<User> findCommonFriends(User user, User common) {
+        final Set<User> userFriends = user.getFriendsId();
+        final Set<User> otherFriends = common.getFriendsId();
+        ArrayList<User> result = new ArrayList<>();
 
-        for (int userId : userFriends) {
-            if (otherFriends.contains(userId)) {
-                result.add(userId);
+        for (User u : userFriends) {
+            if (otherFriends.contains(u)) {
+                result.add(u);
             }
         }
         return result;

@@ -43,10 +43,8 @@ public class FilmService {
 
     public Film create(Film film) {
         if (film != null) {
-            final int id = film.getId();
-
-            if (filmStorage.getFilm(id) != null) {
-                throw new ServerException("Фильм c таким id=" + id + " уже существует");
+            if (film.getId() != null) {
+                throw new ServerException("Фильм c таким id=" + film.getId() + " уже существует");
             }
 
             filmStorage.saveFilm(film);
@@ -65,7 +63,7 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void likeTheFilm (int filmId, final int userId) {
+    public void addLikeTheFilm(int filmId, final int userId) {
         final User user = userStorage.getUser(userId);
         final Film film = filmStorage.getFilm(filmId);
 

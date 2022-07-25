@@ -38,13 +38,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public ArrayList<Integer> findAllFriends(@PathVariable int userId) {
+    public ArrayList<User> findAllFriends(@PathVariable int userId) {
         log.info("Пользователь {} запросил список друзей", userService.getUser(userId));
         return userService.findAllFriends(userId);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public ArrayList<Integer> findCommonFriends(@PathVariable int userId, @PathVariable int otherId) {
+    public ArrayList<User> findCommonFriends(@PathVariable int userId, @PathVariable int otherId) {
         log.info("Пользователь {} запросил список общих друзей c пользователем {}",
                 userService.getUser(userId), userService.getUser(otherId));
         return userService.findCommonFriends(userId, otherId);

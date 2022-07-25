@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -30,10 +29,8 @@ public class UserService {
 
     public User create(User user) {
         if (user != null) {
-            final int id = user.getId();
-
-            if (userStorage.getUser(id) != null) {
-                throw new ServerException("Пользователь c id=" + id + " уже существует");
+            if (user.getId() != null) {
+                throw new ServerException("Пользователь c id=" + user.getId() + " уже существует");
             }
 
             if (user.getName() == null || user.getName().equals("")) {
@@ -75,7 +72,7 @@ public class UserService {
         userStorage.deleteAsFriend(user, friend);
     }
 
-    public ArrayList<Integer> findAllFriends(int userId) {
+    public ArrayList<User> findAllFriends(int userId) {
         final User user = userStorage.getUser(userId);
 
         if (user == null) {
@@ -86,7 +83,7 @@ public class UserService {
 
     }
 
-    public ArrayList<Integer> findCommonFriends(int userId, int commonId) {
+    public ArrayList<User> findCommonFriends(int userId, int commonId) {
         final User user = userStorage.getUser(userId);
         final User common = userStorage.getUser(commonId);
 

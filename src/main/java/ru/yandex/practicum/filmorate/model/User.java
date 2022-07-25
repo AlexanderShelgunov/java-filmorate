@@ -18,5 +18,16 @@ public class User {
     private String name;
     private LocalDate birthday;
     @JsonIgnore
-    private Set<Integer> friendsId = new HashSet<>();
+    private Set<User> friendsId = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", birthday=" + birthday +
+                '}';
+    }
 }
