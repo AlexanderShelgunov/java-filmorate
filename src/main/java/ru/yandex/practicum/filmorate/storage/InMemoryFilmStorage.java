@@ -56,12 +56,5 @@ public class InMemoryFilmStorage implements FilmStorage {
                     return sizeTwo.compareTo(sizeOne);
                 }).limit(count)
                 .collect(Collectors.toList());
-
-//        return likes
-//                .stream()
-//                .sorted(Comparator.comparingInt(f -> f.getLikeUserIds().size()))
-//                .limit(count)
-//                .collect(Collectors.toList());
-
     }
 }
