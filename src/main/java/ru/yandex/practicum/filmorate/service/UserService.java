@@ -8,12 +8,13 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
 
     @Autowired
-    UserStorage userStorage;
+    private UserStorage userStorage;
 
     public User getUser(int userId) {
         final User user = userStorage.getUser(userId);
@@ -83,7 +84,7 @@ public class UserService {
 
     }
 
-    public ArrayList<User> findCommonFriends(int userId, int commonId) {
+    public List<User> findCommonFriends(int userId, int commonId) {
         final User user = userStorage.getUser(userId);
         final User common = userStorage.getUser(commonId);
 

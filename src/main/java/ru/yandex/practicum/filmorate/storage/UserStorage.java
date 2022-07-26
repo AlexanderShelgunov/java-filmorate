@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -23,5 +24,5 @@ public interface UserStorage {
 
     ArrayList<User> findAllFriends(User user);
 
-    ArrayList<User> findCommonFriends(User user, User common);
+    List<User> findCommonFriends(User user, User common);
 }

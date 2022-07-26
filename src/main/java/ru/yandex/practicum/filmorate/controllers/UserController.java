@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @GetMapping("/{userId}")
     public User getUser(@PathVariable int userId) {
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public ArrayList<User> findCommonFriends(@PathVariable int userId, @PathVariable int otherId) {
+    public List<User> findCommonFriends(@PathVariable int userId, @PathVariable int otherId) {
         log.info("Пользователь {} запросил список общих друзей c пользователем {}",
                 userService.getUser(userId), userService.getUser(otherId));
         return userService.findCommonFriends(userId, otherId);
