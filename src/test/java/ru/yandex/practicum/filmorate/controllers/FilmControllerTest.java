@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.ValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -31,10 +31,10 @@ class FilmControllerTest {
         assertDoesNotThrow(() -> filmController.checkValidation(film));
 
         film.setName("");
-        assertThrows(ValidationException.class, () -> filmController.checkValidation(film));
+        assertThrows(ValidateException.class, () -> filmController.checkValidation(film));
 
         film.setName(null);
-        assertThrows(ValidationException.class, () -> filmController.checkValidation(film));
+        assertThrows(ValidateException.class, () -> filmController.checkValidation(film));
 
     }
 
@@ -53,7 +53,7 @@ class FilmControllerTest {
                 "Donec tincidunt sagittis lorem quis rhoncus. Etiam tempus tortor eu neque placerat consectetur. " +
                 "Donec interdum cursus condimentum. Nunc quis el.");
 
-        assertThrows(ValidationException.class, () -> filmController.checkValidation(film));
+        assertThrows(ValidateException.class, () -> filmController.checkValidation(film));
 
     }
 
@@ -70,7 +70,7 @@ class FilmControllerTest {
 
         date = LocalDate.of(1895, 12, 27);
         film.setReleaseDate(date);
-        assertThrows(ValidationException.class, () -> filmController.checkValidation(film));
+        assertThrows(ValidateException.class, () -> filmController.checkValidation(film));
 
     }
 
@@ -81,7 +81,7 @@ class FilmControllerTest {
         assertDoesNotThrow(() -> filmController.checkValidation(film));
 
         film.setDuration(-90);
-        assertThrows(ValidationException.class, () -> filmController.checkValidation(film));
+        assertThrows(ValidateException.class, () -> filmController.checkValidation(film));
 
     }
 }
