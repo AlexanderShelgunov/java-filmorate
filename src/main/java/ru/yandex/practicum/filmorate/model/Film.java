@@ -1,24 +1,30 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Film {
     private Integer id;
     private String name;
-    private String description;
     private LocalDate releaseDate;
+    private String description;
     private int duration;
+    private int rate;
+    private Mpa mpa;
+    private Set<Genre> genres;
 
-    @JsonIgnore
-    private Set<Integer> likeUserIds = new HashSet<>();
+    public void addGenre(Genre genre) {
+        genres.add(genre);
+    }
 }

@@ -5,58 +5,84 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping("/films")
+@RequestMapping
 public class FilmController {
 
     @Autowired
     private FilmService filmService;
 
-    @GetMapping
-    public ArrayList<Film> findAll() {
+    @GetMapping("/films")
+    public List<Film> findAll() {
         log.info("Текущее количество фильмов: {}", filmService.findAll().size());
         return filmService.findAll();
     }
 
-    @GetMapping("/{filmId}")
-    public Film getFilm(@PathVariable int filmId) {
-        log.info("Фильм {} полученый по ID={}", filmService.getFilm(filmId), filmId);
-        return filmService.getFilm(filmId);
+    @GetMapping("/genres")
+    public List<Genre> findAllGenres() {
+        log.info("Текущее количество жанров: {}", filmService.findAllGenres().size());
+        return filmService.findAllGenres();
     }
 
-    @PutMapping("/{filmId}/like/{userId}")
+    @GetMapping("/genres/{genreId}")
+    public Genre findGenreById(@PathVariable int genreId) {
+        log.info("Жанр {} полученый по ID={}", filmService.getGenre(genreId), genreId);
+        return filmService.getGenre(genreId);
+    }
+
+    @GetMapping("/mpa")
+    public List<Mpa> findAllMpa() {
+        log.info("Текущее количество МПА: {}", filmService.findAllMpa().size());
+        return filmService.findAllMpa();
+    }
+
+    @GetMapping("/mpa/{mpaId}")
+    public Mpa findMpaById(@PathVariable int mpaId) {
+        log.info("МПА {} полученый по ID={}", filmService.getMpa(mpaId), mpaId);
+        return filmService.getMpa(mpaId);
+    }
+
+    @GetMapping("/films/{filmId}")
+    public Film getFilmById(@PathVariable int filmId) {
+        log.info("Фильм {} полученый по ID={}", filmService.getFilmById(filmId), filmId);
+        return filmService.getFilmById(filmId);
+    }
+
+    @PutMapping("/films/{filmId}/like/{userId}")
     public void likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
-        log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilm(filmId));
+        log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilmById(filmId));
         filmService.addLikeTheFilm(filmId, userId);
     }
 
-    @DeleteMapping("/{filmId}/like/{userId}")
+    @DeleteMapping("/films/{filmId}/like/{userId}")
     public void removeLikeFromFilm (@PathVariable final int filmId, @PathVariable final int userId) {
-        log.info("Пользователь {} удаляет лайк фильма {}", filmService.getUser(userId), filmService.getFilm(filmId));
+        log.info("Пользователь {} удаляет лайк фильма {}", filmService.getUser(userId), filmService.getFilmById(filmId));
         filmService.removeLikeFromFilm(filmId, userId);
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/films/popular")
     public List<Film> findPopularFilms(
             @RequestParam (value = "count", defaultValue = "10", required = false) Integer count) {
         return filmService.findPopularFilms(count);
     }
 
-    @PostMapping
+    @PostMapping("/films")
     public Film create(@RequestBody Film film) throws ValidateException {
         checkValidation(film);
         return filmService.create(film);
     }
 
-    @PutMapping
+    @PutMapping("/films")
     public Film update(@RequestBody Film film) throws ValidateException {
         checkValidation(film);
         log.info("Обновляемый фильм: {}", film);

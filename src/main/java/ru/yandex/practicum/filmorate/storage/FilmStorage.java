@@ -10,13 +10,13 @@ import java.util.List;
 @Component
 public interface FilmStorage {
 
-    Film getFilm(int filmId);
+    Film getFilmById(int filmId);
 
     Film saveFilm(Film film);
 
     Film updateFilm(Film film);
 
-    ArrayList<Film> findAllFilms();
+    List<Film> findAllFilms();
 
     void likeTheFilm(User user, Film film);
 

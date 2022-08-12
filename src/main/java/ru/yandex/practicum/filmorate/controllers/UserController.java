@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public ArrayList<User> findAllFriends(@PathVariable int userId) {
+    public List<User> findAllFriends(@PathVariable int userId) {
         log.info("Пользователь {} запросил список друзей", userService.getUser(userId));
         return userService.findAllFriends(userId);
     }
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ArrayList<User> findAll() {
+    public List<User> findAll() {
         log.info("Текущее количество пользователей: {}", userService.findAll().size());
         return userService.findAll();
     }
