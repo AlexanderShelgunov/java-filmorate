@@ -16,73 +16,49 @@ import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping
+@RequestMapping("/films")
 public class FilmController {
 
     @Autowired
     private FilmService filmService;
 
-    @GetMapping("/films")
+    @GetMapping
     public List<Film> findAll() {
         log.info("Текущее количество фильмов: {}", filmService.findAll().size());
         return filmService.findAll();
     }
 
-    @GetMapping("/genres")
-    public List<Genre> findAllGenres() {
-        log.info("Текущее количество жанров: {}", filmService.findAllGenres().size());
-        return filmService.findAllGenres();
-    }
-
-    @GetMapping("/genres/{genreId}")
-    public Genre findGenreById(@PathVariable int genreId) {
-        log.info("Жанр {} полученый по ID={}", filmService.getGenre(genreId), genreId);
-        return filmService.getGenre(genreId);
-    }
-
-    @GetMapping("/mpa")
-    public List<Mpa> findAllMpa() {
-        log.info("Текущее количество МПА: {}", filmService.findAllMpa().size());
-        return filmService.findAllMpa();
-    }
-
-    @GetMapping("/mpa/{mpaId}")
-    public Mpa findMpaById(@PathVariable int mpaId) {
-        log.info("МПА {} полученый по ID={}", filmService.getMpa(mpaId), mpaId);
-        return filmService.getMpa(mpaId);
-    }
-
-    @GetMapping("/films/{filmId}")
+    @GetMapping("/{filmId}")
     public Film getFilmById(@PathVariable int filmId) {
         log.info("Фильм {} полученый по ID={}", filmService.getFilmById(filmId), filmId);
         return filmService.getFilmById(filmId);
     }
 
-    @PutMapping("/films/{filmId}/like/{userId}")
+    @PutMapping("/{filmId}/like/{userId}")
     public void likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
         log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilmById(filmId));
         filmService.addLikeTheFilm(filmId, userId);
     }
 
-    @DeleteMapping("/films/{filmId}/like/{userId}")
+    @DeleteMapping("/{filmId}/like/{userId}")
     public void removeLikeFromFilm (@PathVariable final int filmId, @PathVariable final int userId) {
         log.info("Пользователь {} удаляет лайк фильма {}", filmService.getUser(userId), filmService.getFilmById(filmId));
         filmService.removeLikeFromFilm(filmId, userId);
     }
 
-    @GetMapping("/films/popular")
+    @GetMapping("/popular")
     public List<Film> findPopularFilms(
             @RequestParam (value = "count", defaultValue = "10", required = false) Integer count) {
         return filmService.findPopularFilms(count);
     }
 
-    @PostMapping("/films")
+    @PostMapping
     public Film create(@RequestBody Film film) throws ValidateException {
         checkValidation(film);
         return filmService.create(film);
     }
 
-    @PutMapping("/films")
+    @PutMapping
     public Film update(@RequestBody Film film) throws ValidateException {
         checkValidation(film);
         log.info("Обновляемый фильм: {}", film);

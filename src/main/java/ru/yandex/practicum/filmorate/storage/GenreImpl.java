@@ -1,10 +1,9 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,13 +14,16 @@ public class GenreImpl implements GenreDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public GenreImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Genre getGenre(int genreId) {
+        if (genreId < 0) {
+            throw new NotFoundException("Параметр genreId=" + genreId + " не может быть отрицательным");
+        }
+
         final String sqlQuery = "SELECT GENRE_ID, GENRE_NAME " +
                 "FROM GENRES " +
                 "WHERE GENRE_ID = ?";

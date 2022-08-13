@@ -25,14 +25,6 @@ public class FilmService {
     @Qualifier("userDbStorage")
     private UserStorage userStorage;
 
-    @Autowired
-    private GenreDao genreDao;
-
-    @Autowired
-    private MpaDao mpaDao;
-
-
-
     public Film getFilmById(int filmId) {
         final Film film = filmStorage.getFilmById(filmId);
 
@@ -107,28 +99,6 @@ public class FilmService {
             throw new ServerException("Параметр count=" + count + " не может быть отрицательным");
         }
         return filmStorage.findPopularFilms(count);
-    }
-
-    public List<Genre> findAllGenres() {
-        return genreDao.getAllGenre();
-    }
-
-    public Genre getGenre(int genreId) {
-        if (genreId < 0) {
-            throw new NotFoundException("Параметр genreId=" + genreId + " не может быть отрицательным");
-        }
-        return genreDao.getGenre(genreId);
-    }
-
-    public List<Mpa> findAllMpa() {
-        return mpaDao.getAllMpa();
-    }
-
-    public Mpa getMpa(int mpaId) {
-        if (mpaId < 0) {
-            throw new NotFoundException("Параметр mpaId=" + mpaId + " не может быть отрицательным");
-        }
-        return mpaDao.getMpa(mpaId);
     }
 
 }
