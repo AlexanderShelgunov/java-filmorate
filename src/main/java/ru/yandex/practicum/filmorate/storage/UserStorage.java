@@ -16,13 +16,14 @@ public interface UserStorage {
 
     User updateUser(User user);
 
-    ArrayList<User> findAllUsers();
+    List<User> findAllUsers();
 
     void addAsFriend(User user, User friend);
 
     void deleteAsFriend(User user, User friend);
 
-    ArrayList<User> findAllFriends(User user);
+    List<User> findAllFriends(User user);
 
     List<User> findCommonFriends(User user, User common);
+
 }

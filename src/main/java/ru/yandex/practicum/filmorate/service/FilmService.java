@@ -1,32 +1,37 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ServerException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class FilmService {
 
     @Autowired
+    @Qualifier("filmDbStorage")
     private FilmStorage filmStorage;
     @Autowired
+    @Qualifier("userDbStorage")
     private UserStorage userStorage;
 
+    public Film getFilmById(int filmId) {
+        final Film film = filmStorage.getFilmById(filmId);
 
-    public Film getFilm(int filmId) {
-        final Film film = filmStorage.getFilm(filmId);
         if (film == null) {
             throw new NotFoundException("Фильм с id=" + filmId + " не найден");
         }
-        return filmStorage.getFilm(filmId);
+        return filmStorage.getFilmById(filmId);
     }
 
     public User getUser(int userId) {
@@ -37,7 +42,7 @@ public class FilmService {
         return userStorage.getUser(userId);
     }
 
-    public ArrayList<Film> findAll() {
+    public List<Film> findAll() {
         return filmStorage.findAllFilms();
     }
 
@@ -47,25 +52,29 @@ public class FilmService {
                 throw new ServerException("Фильм c таким id=" + film.getId() + " уже существует");
             }
 
-            filmStorage.saveFilm(film);
+            if (film.getMpa() == null) {
+                throw new ServerException("MPA не может быть пустым или null = " + film.getMpa());
+            }
+
         }
-        return film;
+        return filmStorage.saveFilm(film);
     }
 
     public Film update(Film film) {
         if (film != null) {
             final int id = film.getId();
 
-            if (filmStorage.getFilm(id) == null) {
+            if (filmStorage.getFilmById(id) == null) {
                 throw new NotFoundException("Фильма с таким ID " + film.getId() + " не существует");
             }
         }
+
         return filmStorage.updateFilm(film);
     }
 
     public void addLikeTheFilm(int filmId, final int userId) {
         final User user = userStorage.getUser(userId);
-        final Film film = filmStorage.getFilm(filmId);
+        final Film film = filmStorage.getFilmById(filmId);
 
         if (user == null || film == null) {
                 throw new NotFoundException("Пользователь " + user + " или фильм " + film +" не найден");
@@ -76,7 +85,7 @@ public class FilmService {
 
     public void removeLikeFromFilm (int filmId, final int userId) {
         final User user = userStorage.getUser(userId);
-        final Film film = filmStorage.getFilm(filmId);
+        final Film film = filmStorage.getFilmById(filmId);
 
         if (user == null || film == null) {
             throw new NotFoundException("Пользователь " + user + " или фильм " + film +" не найден");
@@ -84,7 +93,6 @@ public class FilmService {
 
         filmStorage.removeLikeFromFilm(user, film);
     }
-
 
     public List<Film> findPopularFilms(int count) {
         if (count < 0) {

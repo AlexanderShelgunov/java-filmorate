@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -21,26 +23,26 @@ public class FilmController {
     private FilmService filmService;
 
     @GetMapping
-    public ArrayList<Film> findAll() {
+    public List<Film> findAll() {
         log.info("Текущее количество фильмов: {}", filmService.findAll().size());
         return filmService.findAll();
     }
 
     @GetMapping("/{filmId}")
-    public Film getFilm(@PathVariable int filmId) {
-        log.info("Фильм {} полученый по ID={}", filmService.getFilm(filmId), filmId);
-        return filmService.getFilm(filmId);
+    public Film getFilmById(@PathVariable int filmId) {
+        log.info("Фильм {} полученый по ID={}", filmService.getFilmById(filmId), filmId);
+        return filmService.getFilmById(filmId);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
     public void likeTheFilm (@PathVariable final int filmId, @PathVariable final int userId) {
-        log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilm(filmId));
+        log.info("Пользователь {} ставит лайк фильму {}", filmService.getUser(userId), filmService.getFilmById(filmId));
         filmService.addLikeTheFilm(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
     public void removeLikeFromFilm (@PathVariable final int filmId, @PathVariable final int userId) {
-        log.info("Пользователь {} удаляет лайк фильма {}", filmService.getUser(userId), filmService.getFilm(filmId));
+        log.info("Пользователь {} удаляет лайк фильма {}", filmService.getUser(userId), filmService.getFilmById(filmId));
         filmService.removeLikeFromFilm(filmId, userId);
     }
 
